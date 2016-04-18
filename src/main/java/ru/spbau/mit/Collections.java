@@ -6,10 +6,10 @@ package ru.spbau.mit;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Collections {
+public interface Collections {
     //private Collections() {}
 
-    public static <T, R> List<R> map(Function1<? super T, R> f, Iterable<T> col) {
+    static <T, R> List<R> map(Function1<? super T, R> f, Iterable<T> col) {
         List<R> res = new ArrayList<>();
         for (T elt : col) {
             res.add(f.apply(elt));
@@ -17,7 +17,7 @@ public abstract class Collections {
         return res;
     }
 
-    public static <T> List filter(Predicate<? super T> p, Iterable<T> col) {
+    static <T> List filter(Predicate<? super T> p, Iterable<T> col) {
         List<T> res = new ArrayList<>();
         for (T elt : col) {
             if (p.apply(elt)) {
@@ -27,7 +27,7 @@ public abstract class Collections {
         return res;
     }
 
-    public static <T> List<T> takeWhile(Predicate<? super T> p, Iterable<T> col) {
+    static <T> List<T> takeWhile(Predicate<? super T> p, Iterable<T> col) {
         List<T> res = new ArrayList<>();
         for (T elt : col) {
             if (!p.apply(elt)) {
@@ -39,11 +39,11 @@ public abstract class Collections {
         return res;
     }
 
-    public static <T> List<T> takeUnless(Predicate<? super T> p, Iterable<T> col) {
+    static <T> List<T> takeUnless(Predicate<? super T> p, Iterable<T> col) {
         return takeWhile(p.not(), col);
     }
 
-    public static <R1 extends R, T, R> R foldl(Function2<R1, ? super T, R1> f,
+    static <R1 extends R, T, R> R foldl(Function2<R1, ? super T, R1> f,
                                                R1 start, Iterable<T> col) {
         for (T elt : col) {
             R1 tmp = f.apply(start, elt);
@@ -52,7 +52,7 @@ public abstract class Collections {
         return start;
     }
 
-    public static <R1 extends R, T, R> R foldr(Function2<? super T, R1, R1>
+    static <R1 extends R, T, R> R foldr(Function2<? super T, R1, R1>
                                                        f, R1 start, Iterable<T> col) {
         //reversed arguments of f
         List<T> assessoir = new ArrayList<>();
