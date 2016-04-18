@@ -4,80 +4,63 @@ package ru.spbau.mit;
  * Created by vbv on 21.03.16.
  */
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 public abstract class Collections {
     //private Collections() {}
 
-    public static <T, R> Iterable<R> map(Function1<? super T, ? extends R> f, Iterable<T> col) {
-        ArrayList<R> res = new ArrayList<>();
-        Iterator<T> it = col.iterator();
-        while (it.hasNext()) {
-            res.add(f.apply(it.next()));
+    public static <T, R> List<R> map(Function1<? super T, R> f, Iterable<T> col) {
+        List<R> res = new ArrayList<>();
+        for (T elt : col) {
+            res.add(f.apply(elt));
         }
         return res;
     }
 
-    public static <T extends R, R> Iterable<R> filter(Predicate<? super T> p, Iterable<T> col) {
-        ArrayList<R> res = new ArrayList<>();
-        Iterator<T> it = col.iterator();
-        while (it.hasNext()) {
-            T tmp = it.next();
-            if (p.apply(tmp)) {
-                res.add(tmp);
+    public static <T> List filter(Predicate<? super T> p, Iterable<T> col) {
+        List<T> res = new ArrayList<>();
+        for (T elt : col) {
+            if (p.apply(elt)) {
+                res.add(elt);
             }
         }
         return res;
     }
 
-    public static <T extends R, R> Iterable<R> takeWhile(Predicate<? super T> p, Iterable<T> col) {
-        ArrayList<R> res = new ArrayList<>();
-        Iterator<T> it = col.iterator();
-        while (it.hasNext()) {
-            T tmp = it.next();
-            if (!p.apply(tmp)) {
+    public static <T> List<T> takeWhile(Predicate<? super T> p, Iterable<T> col) {
+        List<T> res = new ArrayList<>();
+        for (T elt : col) {
+            if (!p.apply(elt)) {
                 break;
             } else {
-                res.add(tmp);
+                res.add(elt);
             }
         }
         return res;
     }
 
-    public static <T extends R, R> Iterable<R> takeUnless(Predicate<? super T> p, Iterable<T> col) {
-        ArrayList<R> res = new ArrayList<>();
-        Iterator<T> it = col.iterator();
-        while (it.hasNext()) {
-            T tmp = it.next();
-            if (!p.apply(tmp)) {
-                res.add(tmp);
-            } else {
-                break;
-            }
-        }
-        return res;
+    public static <T> List<T> takeUnless(Predicate<? super T> p, Iterable<T> col) {
+        return takeWhile(p.not(), col);
     }
 
-    public static <R1 extends R, T, R> R foldl(Function2<? super R1,
-            ? super T, ? extends R1> f, R1 start, Iterable<T> col) {
-        Iterator<T> it = col.iterator();
-        while (it.hasNext()) {
-            R1 tmp = f.apply(start, it.next());
+    public static <R1 extends R, T, R> R foldl(Function2<R1, ? super T, R1> f,
+                                               R1 start, Iterable<T> col) {
+        for (T elt : col) {
+            R1 tmp = f.apply(start, elt);
             start = tmp;
         }
         return start;
     }
 
-    public static <R1 extends R, T, R> R foldr(Function2<? super T,
-            ? super R1, ? extends R1> f, R1 start, Iterable<T> col) { //reversed arguments of f
-        ArrayList<T> assessoir = new ArrayList<>();
-        Iterator<T> it = col.iterator();
-        while (it.hasNext()) {
-            assessoir.add(it.next());
+    public static <R1 extends R, T, R> R foldr(Function2<? super T, R1, R1>
+                                                       f, R1 start, Iterable<T> col) {
+        //reversed arguments of f
+        List<T> assessoir = new ArrayList<>();
+        for (T elt : col) {
+            assessoir.add(elt);
         }
         for (int i = assessoir.size() - 1; i >= 0; i--) {
-            R1 tmp = f.apply(assessoir.get(i), start);
-            start = tmp;
+            start = f.apply(assessoir.get(i), start);
         }
         return start;
     }

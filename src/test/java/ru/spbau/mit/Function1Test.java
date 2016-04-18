@@ -8,22 +8,12 @@ import org.junit.Test;
 public class Function1Test {
     @Test
     public void test1() {
-        Function1<Integer, Integer> plus1 = new Function1<Integer, Integer>() {
-            @Override
-            public Integer apply(Integer arg) {
-                return arg + 1;
-            }
-        };
+        Function1<Integer, Integer> plus1 = arg -> arg + 1;
 
-        Function1<Integer, Integer> minus1 = new Function1<Integer, Integer>() {
-            @Override
-            public Integer apply(Integer arg) {
-                return arg - 1;
-            }
-        };
+        Function1<Number, Integer> minus1 = arg -> arg.intValue() - 1;
 
-        int x = 2;
-        int y = plus1.compose(minus1).apply(x);
+        final int x = 2;
+        final int y = plus1.compose(minus1).apply(x);
         assertEquals(x, y);
     }
 }

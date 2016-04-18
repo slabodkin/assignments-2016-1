@@ -6,7 +6,7 @@ package ru.spbau.mit;
 public interface Function1<T, R> {
     R apply(T arg);
 
-    default <R_out> Function1<T, R_out> compose(final Function1<? super R, R_out> g) {
-        return arg -> g.apply(Function1.this.apply(arg));
+    default <R1> Function1<T, R1> compose(final Function1<? super R, R1> g) {
+        return arg -> g.apply(apply(arg));
     }
 }

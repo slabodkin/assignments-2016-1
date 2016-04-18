@@ -7,20 +7,10 @@ import org.junit.Test;
  */
 public class Function2Test {
     @Test
-    public void test1() {
-        Function2<Integer, Integer, Integer> substraction = new Function2<Integer, Integer, Integer>() {
-            @Override
-            public Integer apply(Integer x, Integer y) {
-                return x - y;
-            }
-        };
+    public void testCompose() {
+        Function2<Integer, Integer, Integer> substraction = (x, y) -> x - y;
 
-        Function1<Integer, Integer> plus1 = new Function1<Integer, Integer>() {
-            @Override
-            public Integer apply(Integer x) {
-                return x + 1;
-            }
-        };
+        Function1<Number, Integer> plus1 = x -> x.intValue() + 1;
 
         int x = 2;
         int y = 1;
@@ -29,15 +19,8 @@ public class Function2Test {
     }
 
     @Test
-    public void test2() {
-        Function2<Integer, Integer, Integer> substraction = new Function2<Integer, Integer, Integer>() {
-            @Override
-            public Integer apply(Integer x, Integer y) {
-                return x - y;
-            }
-        };
-
-
+    public void testBind() {
+        Function2<Integer, Integer, Integer> substraction = (x, y) -> x - y;
         int x = 2;
         int y = 1;
         int z = substraction.bind1(x).apply(y);
@@ -47,15 +30,8 @@ public class Function2Test {
     }
 
     @Test
-    public void test3() {
-        Function2<Integer, Integer, Integer> substraction = new Function2<Integer, Integer, Integer>() {
-            @Override
-            public Integer apply(Integer x, Integer y) {
-                return x - y;
-            }
-        };
-
-
+    public void testCurry() {
+        Function2<Integer, Integer, Integer> substraction = (x, y) -> x - y;
         int x = 2;
         int y = 1;
         int z = substraction.curry().apply(x).apply(y);

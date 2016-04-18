@@ -5,85 +5,77 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by vbv on 22.03.16.
  */
 public class CollectionsTest {
 
     @Test
-    public void test1() {
-        Function1<Integer, Integer> plus1 = new Function1<Integer, Integer>() {
-            @Override
-            public Integer apply(Integer x) {
-                return x + 1;
-            }
-        };
+    public void testMap() {
+        Function1<Number, Integer> plus1 = x -> x.intValue() + 1;
 
-        Predicate<Integer> isEven = new Predicate<Integer>() {
-            @Override
-            public Boolean apply(Integer x) {
-                return x % 2 == 0;
-            }
-        };
+        final List<Integer> toTest = new ArrayList<>(Arrays.asList(1, 2));
 
-        final ArrayList<Integer> toTest = new ArrayList<Integer>(Arrays.asList(1, 2));
-
-        Iterable<Integer> toMap = Collections.map(plus1, toTest);
-        final int listSecond = 3;
-        assertEquals(toMap, Arrays.asList(2, listSecond));
-
-        Iterable<Integer> toFilter = Collections.filter(isEven, toTest);
-        assertEquals(toFilter, Arrays.asList(2));
+        List<Integer> toMap = Collections.map(plus1, toTest);
+        final List<Integer> answer = Arrays.asList(2, 3);
+        assertEquals(toMap, answer);
     }
 
     @Test
-    public void test2() {
-        final ArrayList<Integer> toTest = new ArrayList<Integer>(Arrays.asList(2, 6, 1));
+    public void testFilter() {
+        Predicate<Number> isEven = x -> x.intValue() % 2 == 0;
 
-        Predicate<Integer> isEven = new Predicate<Integer>() {
-            @Override
-            public Boolean apply(Integer x) {
-                return x % 2 == 0;
-            }
-        };
+        final List<Integer> toTest = new ArrayList<>(Arrays.asList(1, 2));
 
-        Predicate<Integer> isMoreThan5 = new Predicate<Integer>() {
-            private final int threshold = 5;
-            @Override
-            public Boolean apply(Integer x) {
-                return x > threshold;
-            }
-        };
-
-        Iterable<Integer> toTakeWhile = Collections.takeWhile(isEven, toTest);
-        final int x = 6;
-        assertEquals(toTakeWhile, Arrays.asList(2, x));
-
-        Iterable<Integer> toTakeUnless = Collections.takeUnless(isMoreThan5, toTest);
-        assertEquals(toTakeUnless, Arrays.asList(2));
+        List<Integer> toFilter = Collections.filter(isEven, toTest);
+        assertEquals(toFilter, java.util.Collections.singletonList(2));
     }
 
     @Test
-    public void test3() {
-        Function2<String, String, String> conc = new Function2<String, String, String>() {
-            @Override
-            public String apply(String x, String y) {
-                StringBuilder s = new StringBuilder();
-                s.append(x);
-                s.append(y);
-                return s.toString();
-            }
-        };
+    public void testTakes() {
+        final List<Integer> toTest = new ArrayList<Integer>(Arrays.asList(2, 6, 1));
 
+        Predicate<Number> isEven = x -> x.intValue() % 2 == 0;
+
+        final int threshold = 5;
+        Predicate<Number> isMoreThan5 = x -> x.intValue() > threshold;
+
+        List<Integer> toTakeWhile = Collections.takeWhile(isEven, toTest);
+        final List<Integer> answer = Arrays.asList(2, 6);
+        assertEquals(toTakeWhile, answer);
+
+        List<Integer> toTakeUnless = Collections.takeUnless(isMoreThan5, toTest);
+        assertEquals(toTakeUnless, java.util.Collections.singletonList(2));
+
+        final List<Integer> toTestEmpty = java.util.Collections.emptyList();
+        List<Integer> toTakeWhileFromEmpty = Collections.takeWhile(isEven, toTestEmpty);
+        assertEquals(toTakeWhileFromEmpty, toTestEmpty);
+    }
+
+    @Test
+    public void testFoldl() {
+        Function2<String, Object, String> lConc = (x, y) -> x + y.toString();
 
         final ArrayList<String> toTest = new ArrayList<String>(Arrays.asList("a", "b"));
-        final String foldled = Collections.foldl(conc, "c", toTest);
-        final String answerl = "cab";
-        assertEquals(foldled, answerl);
 
-        final String foldred = Collections.foldr(conc, "c", toTest);
-        final String answerr = "abc";
-        assertEquals(foldred, answerr);
+        final String foldled = Collections.foldl(lConc, "c", toTest);
+        final String lAnswer = "cab";
+
+        assertEquals(foldled, lAnswer);
+    }
+
+    @Test
+    public void testFoldr() {
+        Function2<Object, String, String> rConc = (x, y) -> x.toString() + y;
+
+        final ArrayList<String> toTest = new ArrayList<String>(Arrays.asList("a", "b"));
+
+        final String foldred = Collections.foldr(rConc, "c", toTest);
+        final String rAnswer = "abc";
+
+        assertEquals(foldred, rAnswer);
     }
 
 }
